@@ -3,7 +3,6 @@
  * Logical Architecture for Predictive Learning and Autonomous Causal Evolution
  */
 import { CausalGraph2D } from './engine/CausalGraph2D.js';
-import { AudioEngine } from './engine/AudioEngine.js';
 import { AgentOrchestrator } from './agents/AgentOrchestrator.js';
 import { AnalystAgent } from './agents/AnalystAgent.js';
 import { CounterfactualAgent } from './agents/CounterfactualAgent.js';
@@ -27,8 +26,7 @@ const state = {
 };
 
 async function boot() {
-  const audioEngine = new AudioEngine();
-  const hud = new HUD(audioEngine);
+  const hud = new HUD();
   const llmService = new LLMService();
 
   hud.setupAuthModal(llmService);
@@ -61,7 +59,7 @@ async function boot() {
   hud.updateLoadingProgress(50, 'Computing force-directed layout...');
   await delay(300);
 
-  const graph2D = new CausalGraph2D('#causal-graph-canvas', causalGraphData, audioEngine);
+  const graph2D = new CausalGraph2D('#causal-graph-canvas', causalGraphData);
 
   hud.updateLoadingProgress(70, 'Initializing agent orchestrator...');
   await delay(300);
@@ -91,7 +89,6 @@ async function boot() {
   let selectedNodeId = null;
 
   graph2D.onNodeClick((nodeId) => {
-    audioEngine.playHover();
     selectedNodeId = nodeId;
     const nodeData = causalGraphData.nodes.find(n => n.id === nodeId);
     if (!nodeData) return;
@@ -135,7 +132,6 @@ async function boot() {
   const btnSnapshot = document.getElementById('btn-snapshot');
   if (btnSnapshot) {
     btnSnapshot.addEventListener('click', () => {
-      audioEngine.playHover();
       hud.appendTerminal('\n[SYSTEM] Canvas screenshot not supported in 2D SVG mode yet.');
     });
   }
@@ -143,7 +139,6 @@ async function boot() {
   const btnExport = document.getElementById('btn-export-data');
   if (btnExport) {
     btnExport.addEventListener('click', () => {
-      audioEngine.playHover();
       const exportData = JSON.stringify(causalGraphData, null, 2);
       const blob = new Blob([exportData], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
@@ -159,7 +154,6 @@ async function boot() {
   const btnPause = document.getElementById('btn-pause-agents');
   if (btnPause) {
     btnPause.addEventListener('click', () => {
-      audioEngine.playHover();
       state.isRunning = false;
       hud.enableButton('btn-analyze');
       hud.enableButton('btn-autodemo');
@@ -167,23 +161,11 @@ async function boot() {
     });
   }
 
-  const allowAudio = () => {
-    audioEngine.resume();
-    audioEngine.startAmbient();
-    document.removeEventListener('click', allowAudio);
-  };
-  document.addEventListener('click', allowAudio);
 
-  document.querySelectorAll('button, select, input').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      if (!el.disabled) audioEngine.playHover();
-    });
-  });
 
   const getActiveAgents = () => agentScriptsData.agents || agentScriptsData['incident_spike'] || agentScriptsData;
 
   const handleLlmPhase = async (stepBtnId, executionLogic) => {
-    audioEngine.playClick();
     state.isRunning = true;
     hud.disableAllButtons();
     hud.setButtonRunning(stepBtnId, true);
@@ -238,7 +220,6 @@ async function boot() {
       const activeAgents = getActiveAgents();
       await interventionAgent.run(state.scenario.steps.intervene, causalGraphData.temporalStates);
       await orchestrator.runAgent(activeAgents.intervention, 'intervene');
-      audioEngine.playSuccess();
       handleLlmPhaseComplete('btn-intervene', 'btn-reveal');
     });
   };
@@ -246,7 +227,6 @@ async function boot() {
 
   // REVEAL
   const runReveal = async () => {
-    audioEngine.playClick();
     state.isRunning = true;
     hud.disableAllButtons();
     hud.setButtonRunning('btn-reveal', true);
@@ -296,8 +276,6 @@ async function boot() {
 
       evolutionAgentVisual.evolve(state.scenario.steps.evolve, evolutionResults);
       await orchestrator.runAgent(activeAgents.evolution, 'evolve');
-
-      audioEngine.playSuccess();
       hud.updateMetrics(undefined, undefined, state.scenario.steps.evolve.accuracy_after, evolutionEngine.getIntelligenceScore());
 
       hud.setButtonRunning('btn-evolve', false);
@@ -311,7 +289,6 @@ async function boot() {
   // AUTO DEMO
   document.getElementById('btn-autodemo')?.addEventListener('click', async () => {
     if (state.isRunning) return;
-    audioEngine.playClick();
     
     graph2D.resetAllNodes();
     graph2D.resetAllEdges();

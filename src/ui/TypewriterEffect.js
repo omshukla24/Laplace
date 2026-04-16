@@ -2,9 +2,8 @@
  * TypewriterEffect.js — Character-by-character text reveal with cursor blink.
  */
 export class TypewriterEffect {
-  constructor(container, audioEngine, options = {}) {
+  constructor(container, options = {}) {
     this.container = container;
-    this.audioEngine = audioEngine;
     this.speed = options.speed || 25; // ms per character
     this.queue = [];
     this.isTyping = false;

@@ -6,8 +6,7 @@ import { TypewriterEffect } from './TypewriterEffect.js';
 import { MetricsCounter } from './MetricsCounter.js';
 
 export class HUD {
-  constructor(audioEngine) {
-    this.audioEngine = audioEngine;
+  constructor() {
     this.elements = {
       overlay: document.getElementById('hud-overlay'),
       agentName: document.getElementById('agent-name'),
@@ -28,7 +27,7 @@ export class HUD {
       apiKeyInput: document.getElementById('api-key-input'),
     };
 
-    this.typewriter = new TypewriterEffect(this.elements.agentThoughts, this.audioEngine);
+    this.typewriter = new TypewriterEffect(this.elements.agentThoughts);
     this.metrics = new MetricsCounter();
 
     // Register metrics
@@ -50,8 +49,6 @@ export class HUD {
 
     navBtns.forEach(btn => {
       btn.addEventListener('click', () => {
-        if (this.audioEngine) this.audioEngine.playClick();
-        
         // Remove active state
         navBtns.forEach(b => b.classList.remove('active'));
         pageViews.forEach(p => p.classList.remove('active'));
@@ -67,12 +64,10 @@ export class HUD {
 
   setupAuthModal(llmService, onKeySaved) {
     this.elements.btnSettings.addEventListener('click', () => {
-      if (this.audioEngine) this.audioEngine.playClick();
       this.showAuthModal();
     });
 
     this.elements.btnCloseModal.addEventListener('click', () => {
-      if (this.audioEngine) this.audioEngine.playClick();
       this.hideAuthModal();
     });
 
@@ -80,7 +75,6 @@ export class HUD {
       const key = this.elements.apiKeyInput.value.trim();
       if (key) {
         llmService.setLocalKey(key);
-        if (this.audioEngine) this.audioEngine.playSuccess();
         this.hideAuthModal();
         if (onKeySaved) onKeySaved();
       }
@@ -94,7 +88,6 @@ export class HUD {
         const key = settingsInput.value.trim();
         if (key) {
           llmService.setLocalKey(key);
-          if (this.audioEngine) this.audioEngine.playSuccess();
           this.elements.apiKeyInput.value = key; // Sync with original modal just in case
           settingsBtn.textContent = "Configuration Saved";
           setTimeout(() => settingsBtn.textContent = "Save Configuration", 2000);

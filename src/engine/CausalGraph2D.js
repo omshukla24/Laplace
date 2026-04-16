@@ -6,8 +6,7 @@
 import * as d3 from 'd3';
 
 export class CausalGraph2D {
-  constructor(svgSelector, graphData, audioEngine) {
-    this.audioEngine = audioEngine;
+  constructor(svgSelector, graphData) {
     this.graphData = graphData;
     this.nodeMap = new Map();
     this.edgeMap = new Map();
@@ -104,9 +103,6 @@ export class CausalGraph2D {
       .on('click', (event, d) => {
         event.stopPropagation();
         if (this.callbacks.nodeClick) this.callbacks.nodeClick(d.id);
-      })
-      .on('mouseenter', (event, d) => {
-        if (this.audioEngine) this.audioEngine.playHover();
       });
 
     // Label bindings
