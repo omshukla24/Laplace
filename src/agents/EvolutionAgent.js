@@ -1,6 +1,6 @@
 /**
  * EvolutionAgent.js — Compares predictions to ground truth and evolves the model.
- * The visual manifestation of L.A.P.L.A.C.E.'s self-improvement.
+ * The visual manifestation of LAPLACE's self-improvement.
  */
 
 export class EvolutionAgentVisual {

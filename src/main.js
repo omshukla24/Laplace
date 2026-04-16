@@ -1,9 +1,8 @@
 /**
- * main.js — L.A.P.L.A.C.E. Entry Point
+ * main.js — LAPLACE Entry Point
  * Logical Architecture for Predictive Learning and Autonomous Causal Evolution
  */
-import { SceneManager } from './engine/SceneManager.js';
-import { CausalGraph3D } from './engine/CausalGraph3D.js';
+import { CausalGraph2D } from './engine/CausalGraph2D.js';
 import { AudioEngine } from './engine/AudioEngine.js';
 import { AgentOrchestrator } from './agents/AgentOrchestrator.js';
 import { AnalystAgent } from './agents/AnalystAgent.js';
@@ -56,25 +55,22 @@ async function boot() {
     state.currentValues[node.id] = causalGraphData.temporalStates.T0.values[node.id];
   });
 
-  hud.updateLoadingProgress(30, 'Initializing Three.js renderer...');
+  hud.updateLoadingProgress(30, 'Initializing 2D Canvas...');
   await delay(300);
-
-  const container = document.getElementById('canvas-container');
-  const sceneManager = new SceneManager(container);
 
   hud.updateLoadingProgress(50, 'Computing force-directed layout...');
   await delay(300);
 
-  const graph3D = new CausalGraph3D(sceneManager, causalGraphData, audioEngine);
+  const graph2D = new CausalGraph2D('#causal-graph-canvas', causalGraphData, audioEngine);
 
   hud.updateLoadingProgress(70, 'Initializing agent orchestrator...');
   await delay(300);
 
   const orchestrator = new AgentOrchestrator(llmService, causalGraphData);
-  const analystAgent = new AnalystAgent(graph3D, causalGraphData);
-  const counterfactualAgent = new CounterfactualAgent(graph3D, causalGraphData);
-  const interventionAgent = new InterventionAgent(graph3D, causalGraphData);
-  const evolutionAgentVisual = new EvolutionAgentVisual(graph3D, causalGraphData);
+  const analystAgent = new AnalystAgent(graph2D, causalGraphData);
+  const counterfactualAgent = new CounterfactualAgent(graph2D, causalGraphData);
+  const interventionAgent = new InterventionAgent(graph2D, causalGraphData);
+  const evolutionAgentVisual = new EvolutionAgentVisual(graph2D, causalGraphData);
   const evolutionEngine = new EvolutionEngine(causalGraphData);
 
   hud.connectOrchestrator(orchestrator);
@@ -84,11 +80,92 @@ async function boot() {
 
   hud.updateMetrics(causalGraphData.nodes.length, causalGraphData.edges.length, 0, 0);
 
-  hud.updateLoadingProgress(100, 'L.A.P.L.A.C.E. ready.');
-  await delay(600);
+  hud.updateLoadingProgress(100, 'LAPLACE ready.');
+  await delay(2500); // Extended delay to show the exact loading screen requested
 
-  sceneManager.start();
   hud.hideLoadingScreen();
+
+  // Phase 4: Node Inspector Bindings
+  const inspectorPanel = document.getElementById('node-inspector-panel');
+  const btnCloseInspector = document.getElementById('btn-close-inspector');
+  let selectedNodeId = null;
+
+  graph2D.onNodeClick((nodeId) => {
+    audioEngine.playHover();
+    selectedNodeId = nodeId;
+    const nodeData = causalGraphData.nodes.find(n => n.id === nodeId);
+    if (!nodeData) return;
+
+    document.getElementById('inspector-node-id').textContent = nodeData.id.replace(/_/g, ' ');
+    document.getElementById('inspector-node-cat').textContent = nodeData.category;
+    document.getElementById('inspector-node-desc').textContent = nodeData.description || "Core causal parameter.";
+    
+    const currentVal = state.currentValues[nodeId] !== undefined ? state.currentValues[nodeId] : nodeData.baseline;
+    document.getElementById('inspector-node-val').textContent = currentVal.toFixed(2);
+    document.getElementById('inspector-node-unit').textContent = nodeData.unit;
+
+    // Slide in using class
+    inspectorPanel.className = 'glass-panel visible';
+  });
+
+  graph2D.onBackgroundClick(() => {
+    selectedNodeId = null;
+    inspectorPanel.className = 'glass-panel';
+    // Removed style.right = '-400px', we now use CSS classes if needed or stick to styles
+    inspectorPanel.classList.remove('visible');
+  });
+
+  if (btnCloseInspector) {
+    btnCloseInspector.addEventListener('click', () => {
+      selectedNodeId = null;
+      inspectorPanel.classList.remove('visible');
+    });
+  }
+
+  // Node controls
+  document.getElementById('btn-intervene-node')?.addEventListener('click', () => {
+    if (selectedNodeId) {
+      document.getElementById('hypothesis-node').value = selectedNodeId;
+      document.querySelector('[data-target="view-hypothesis"]').click();
+      inspectorPanel.classList.remove('visible');
+    }
+  });
+
+  // Phase 5: Global Controls
+  const btnSnapshot = document.getElementById('btn-snapshot');
+  if (btnSnapshot) {
+    btnSnapshot.addEventListener('click', () => {
+      audioEngine.playHover();
+      hud.appendTerminal('\n[SYSTEM] Canvas screenshot not supported in 2D SVG mode yet.');
+    });
+  }
+
+  const btnExport = document.getElementById('btn-export-data');
+  if (btnExport) {
+    btnExport.addEventListener('click', () => {
+      audioEngine.playHover();
+      const exportData = JSON.stringify(causalGraphData, null, 2);
+      const blob = new Blob([exportData], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `LAPLACE_SCM_${Date.now()}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+      hud.appendTerminal('\n[SYSTEM] Causal graph exported to JSON.');
+    });
+  }
+
+  const btnPause = document.getElementById('btn-pause-agents');
+  if (btnPause) {
+    btnPause.addEventListener('click', () => {
+      audioEngine.playHover();
+      state.isRunning = false;
+      hud.enableButton('btn-analyze');
+      hud.enableButton('btn-autodemo');
+      hud.appendTerminal('\n[SYSTEM] Orchestrator halted. Agents paused.');
+    });
+  }
 
   const allowAudio = () => {
     audioEngine.resume();
@@ -116,7 +193,7 @@ async function boot() {
     } catch(e) {
       if (e.message === 'LLM_RATE_LIMIT' || e.message === 'LLM_AUTH_ERROR') {
         hud.appendTerminal(`\n[SYSTEM ERR] Gemini API limit or auth error. Please provide API Key to continue.`);
-        hud.showAuthModal();
+        hud.showAuthModal(true);
       } else {
         hud.appendTerminal(`\n[SYSTEM FATAL] ${e.message}`);
       }
@@ -236,9 +313,9 @@ async function boot() {
     if (state.isRunning) return;
     audioEngine.playClick();
     
-    graph3D.resetAllNodes();
-    graph3D.resetAllEdges();
-    graph3D.resetCamera();
+    graph2D.resetAllNodes();
+    graph2D.resetAllEdges();
+    graph2D.resetCamera();
     hud.setTimelineStep('init');
 
     hud.disableAllButtons();
@@ -263,6 +340,67 @@ async function boot() {
     hud.enableButton('btn-analyze');
     hud.enableButton('btn-autodemo');
   });
+
+  // --- PHASE 2: NEW DASHBOARD LOGIC ---
+
+  // Populate Ontology Table
+  const tbody = document.getElementById('ontology-tbody');
+  if (tbody) {
+    causalGraphData.nodes.forEach(node => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="font-family: var(--font-mono); color: var(--color-cyan);">${node.id}</td>
+        <td><span style="background: var(--color-surface-hover); padding: 2px 6px; border-radius: 4px; font-size: 11px;">${node.category}</span></td>
+        <td style="font-family: var(--font-mono);">${node.baseline.toFixed(2)}</td>
+        <td style="color: var(--color-text-muted);">${node.unit}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // Bind Hypothesis Engine
+  const btnHypothesis = document.getElementById('btn-run-hypothesis');
+  if (btnHypothesis) {
+    btnHypothesis.addEventListener('click', async () => {
+      const targetNodeId = document.getElementById('hypothesis-node').value.trim();
+      const overrideVal = parseFloat(document.getElementById('hypothesis-value').value);
+
+      if (!targetNodeId || isNaN(overrideVal)) {
+        hud.appendTerminal('\n[ERR] Hypothesis Engine: Invalid node ID or value.');
+        return;
+      }
+
+      if (!state.currentValues[targetNodeId]) {
+        hud.appendTerminal(`\n[ERR] Node '${targetNodeId}' not found in SCM.`);
+        return;
+      }
+
+      btnHypothesis.textContent = "Running...";
+      btnHypothesis.disabled = true;
+
+      // Jump to console view
+      document.querySelector('[data-target="view-agent-console"]')?.click();
+      hud.appendTerminal(`\n[SIMULATION] Initiating free-form counterfactual on ${targetNodeId} => ${overrideVal}`);
+
+      // Temporary scenario override
+      const customConfig = {
+        title: "Custom Hypothesis",
+        intervention_node: targetNodeId,
+        intervention_value: overrideVal,
+        estimated_paths: state.scenario.steps.whatif.estimated_paths // Re-use general paths for llm context
+      };
+
+      try {
+        state.predictedValues = await counterfactualAgent.run(customConfig, state.currentValues);
+        hud.appendTerminal(`\n[SIMULATION] Counterfactual successfully computed.`);
+      } catch (e) {
+        hud.appendTerminal(`\n[ERR] Hypothesis Simulation Failed: ${e.message}`);
+      }
+
+      btnHypothesis.textContent = "Run Counterfactual Simulation";
+      btnHypothesis.disabled = false;
+    });
+  }
 }
 
 function delay(ms) {
@@ -270,7 +408,7 @@ function delay(ms) {
 }
 
 boot().catch(err => {
-  console.error('[L.A.P.L.A.C.E.] Fatal boot error:', err);
+  console.error('[LAPLACE] Fatal boot error:', err);
   const status = document.querySelector('.loading-status');
   if (status) status.textContent = `Error: ${err.message}`;
 });

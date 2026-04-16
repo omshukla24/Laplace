@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>L.A.P.L.A.C.E. — Autonomous Causal Intelligence</title>
+  <title>LAPLACE — Autonomous Causal Intelligence</title>
   <meta name="description" content="Logical Architecture for Predictive Learning and Autonomous Causal Evolution. An AI platform that discovers causal structure, tests interventions, and evolves its own intelligence." />
   <meta name="theme-color" content="#0a0e1a" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -12,45 +12,62 @@
   <link rel="stylesheet" href="/src/styles/index.css" />
 </head>
 <body>
-  <!-- Three.js Canvas Mount -->
-  <div id="canvas-container"></div>
-
-  <!-- Loading Screen -->
-  <div id="loading-screen">
-    <div class="loading-content">
-      <div class="loading-logo">
-        <span class="logo-letter" style="--i:0">L</span>
-        <span class="logo-dot">.</span>
-        <span class="logo-letter" style="--i:1">A</span>
-        <span class="logo-dot">.</span>
-        <span class="logo-letter" style="--i:2">P</span>
-        <span class="logo-dot">.</span>
-        <span class="logo-letter" style="--i:3">L</span>
-        <span class="logo-dot">.</span>
-        <span class="logo-letter" style="--i:4">A</span>
-        <span class="logo-dot">.</span>
-        <span class="logo-letter" style="--i:5">C</span>
-        <span class="logo-dot">.</span>
-        <span class="logo-letter" style="--i:6">E</span>
-        <span class="logo-dot last-dot">.</span>
+  <!-- Dashboard Layout -->
+  <div id="dashboard-layout">
+    
+    <!-- Sidebar Navigation -->
+    <nav id="sidebar-nav">
+      <div class="sidebar-brand">
+        <h1 class="brand-name">LAPLACE</h1>
+        <span class="brand-tagline">Causal Intelligence</span>
       </div>
-      <p class="loading-subtitle">Logical Architecture for Predictive Learning<br/>and Autonomous Causal Evolution</p>
-      <div class="loading-bar">
-        <div class="loading-bar-fill"></div>
-      </div>
-      <p class="loading-status">Initializing causal engine...</p>
-    </div>
-  </div>
+      <div class="sidebar-menu">
+        <button class="nav-btn active" data-target="view-topology">
+          <svg viewBox="0 0 24 24" fill="none" class="nav-icon" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
+          Topology View
+        </button>
+        <button class="nav-btn" data-target="view-agent-console">
+          <svg viewBox="0 0 24 24" fill="none" class="nav-icon" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/></svg>
+          Agent Console
+        </button>
+        <button class="nav-btn" data-target="view-analytics">
+          <svg viewBox="0 0 24 24" fill="none" class="nav-icon" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+          Analytics & Data
+        </button>
+        <div style="height: 12px"></div>
+        <div style="padding: 0 16px; font-size: 10px; color: var(--color-text-muted); text-transform: uppercase;">Core Utilities</div>
+        <button class="nav-btn" data-target="view-hypothesis">
+          <svg viewBox="0 0 24 24" fill="none" class="nav-icon" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+          Hypothesis Engine
+        </button>
+        <button class="nav-btn" data-target="view-ontology">
+          <svg viewBox="0 0 24 24" fill="none" class="nav-icon" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+          Ontology Manager
+        </button>
 
-  <!-- HUD Overlay -->
-  <div id="hud-overlay">
+        <button class="nav-btn" data-target="view-settings">
+          <svg viewBox="0 0 24 24" fill="none" class="nav-icon" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Settings
+        </button>
+      </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="main-content">
+      
+      <!-- View 1: Topology (3D + Overlay) -->
+      <section id="view-topology" class="page-view active">
+        <!-- D3.js Canvas Mount -->
+        <div id="canvas-container">
+          <svg id="causal-graph-canvas"></svg>
+        </div>
+        
+        <!-- HUD Overlay -->
+        <div id="hud-overlay">
     <!-- Top Bar -->
     <header id="hud-topbar">
       <div class="topbar-left">
-        <div class="brand-container">
-          <h1 class="brand-name">L.A.P.L.A.C.E.</h1>
-          <span class="brand-tagline">Autonomous Causal Intelligence</span>
-        </div>
+        <!-- Brand removed to fix duplicate sidebar layout -->
       </div>
       <div class="topbar-right" id="metrics-dashboard">
         <button id="btn-settings" class="icon-btn" title="API Settings">
@@ -78,8 +95,8 @@
     <!-- Auth Modal (Hidden by default) -->
     <div id="auth-modal" class="modal-overlay hidden">
       <div class="modal-card glass-panel">
-        <h2>API Quota Reached</h2>
-        <p>L.A.P.L.A.C.E. powers its autonomous agents with Gemini 2.5 Flash. Our default project API limits have been reached, but you can continue seamlessly by providing your own API key.</p>
+        <h2 id="auth-modal-title">API Configuration</h2>
+        <p id="auth-modal-desc">LAPLACE uses Gemini 2.5 Flash for autonomous agent operations. Please provide your API key to enable causal inference.</p>
         <div class="input-group">
           <input type="password" id="api-key-input" placeholder="Paste Gemini API Key here...">
         </div>
@@ -127,7 +144,7 @@
         <span class="terminal-toggle-icon">▲</span>
       </div>
       <div class="terminal-body" id="terminal-body">
-        <pre id="terminal-output">L.A.P.L.A.C.E. v1.0 — Causal Intelligence Engine
+        <pre id="terminal-output">LAPLACE v1.0 — Causal Intelligence Engine
 Initializing structural causal model...
 SCM loaded: 12 variables, 18 causal links
 Ready.
@@ -172,6 +189,7 @@ Ready.
 
     <!-- Control Bar (Bottom Right) -->
     <div id="control-bar">
+      <!-- ... -->
       <button class="ctrl-btn" id="btn-analyze" title="Run root-cause analysis">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         <span>Analyze</span>
@@ -193,10 +211,219 @@ Ready.
         <span>Evolve</span>
       </button>
       <div class="ctrl-divider"></div>
+      <button class="ctrl-btn" id="btn-pause-agents" title="Halt Agent Operations">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+        <span>Pause</span>
+      </button>
+      <button class="ctrl-btn" id="btn-snapshot" title="Capture Topology Snapshot">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <span>Snapshot</span>
+      </button>
+      <button class="ctrl-btn" id="btn-export-data" title="Export SCM as JSON">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span>Export</span>
+      </button>
+      <div class="ctrl-divider"></div>
       <button class="ctrl-btn auto-demo" id="btn-autodemo" title="Run full cinematic demo">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         <span>Auto Demo</span>
       </button>
+    </div>
+
+    <!-- Node Inspector Panel (Hidden by Default) -->
+    <aside id="node-inspector-panel" class="glass-panel" style="position: absolute; right: -400px; top: 100px; width: 350px; z-index: var(--z-panel); transition: right var(--duration-normal) var(--ease-spring); border-left: 2px solid var(--color-cyan);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-default);">
+        <div>
+          <h3 id="inspector-node-id" style="color: var(--color-cyan); font-family: var(--font-mono); font-size: var(--text-sm);">NODE_ID</h3>
+          <span id="inspector-node-cat" style="font-size: 10px; background: var(--color-surface); padding: 2px 6px; border-radius: 4px; color: var(--color-text-secondary); text-transform: uppercase;">CATEGORY</span>
+        </div>
+        <button id="btn-close-inspector" class="icon-btn" style="margin: 0; padding: 4px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      </div>
+      
+      <p id="inspector-node-desc" style="font-size: var(--text-xs); color: var(--color-text-secondary); margin-bottom: var(--space-md); line-height: 1.4;">Node description will appear here.</p>
+      
+      <div style="display: flex; gap: var(--space-lg); margin-bottom: var(--space-lg); padding: var(--space-sm); background: rgba(0,0,0,0.3); border-radius: var(--radius-sm);">
+        <div>
+          <div style="font-size: 10px; color: var(--color-text-muted);">CURRENT VALUE</div>
+          <div id="inspector-node-val" style="font-family: var(--font-mono); font-size: var(--text-lg); color: #fff;">0.00</div>
+        </div>
+        <div>
+          <div style="font-size: 10px; color: var(--color-text-muted);">UNIT</div>
+          <div id="inspector-node-unit" style="font-size: var(--text-sm); color: var(--color-text-secondary); padding-top: 4px;">index</div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: var(--space-sm); font-family: var(--font-mono); margin-bottom: var(--space-md);">
+         <div style="font-size: 10px; color: var(--color-text-muted);">NODE CONTROLS (Manual Override)</div>
+         <button id="btn-intervene-node" class="glass-btn outline" style="font-size: 10px; text-align: left; padding: var(--space-xs) var(--space-sm);">[!] Force Intervene</button>
+         <button id="btn-lock-node" class="glass-btn outline" style="font-size: 10px; text-align: left; padding: var(--space-xs) var(--space-sm);">[#] Lock Concept (Prevent Evolution)</button>
+      </div>
+    </aside>
+
+    </div>
+      </section>
+
+      <!-- View 2: Agent Console (2D) -->
+      <section id="view-agent-console" class="page-view">
+        <div class="page-header">
+          <h2>Agent Execution Console</h2>
+          <p>Real-time multisystem stream of autonomous agent tasks and reasoning.</p>
+        </div>
+        <div class="console-grid">
+          <div class="console-main glass-panel" id="full-terminal-body">
+            <pre id="full-terminal-output">System Booting... waiting for tasks.</pre>
+          </div>
+          <div class="console-sidebar glass-panel">
+            <h3>Active Agent</h3>
+            <div id="console-agent-status">Awaiting command...</div>
+            <div id="console-agent-progress"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- View 3: Analytics (2D) -->
+      <section id="view-analytics" class="page-view">
+        <div class="page-header">
+          <h2>Analytics & Evolution Data</h2>
+          <p>Detailed breakdown of causal accuracy, interventions, and model evolution.</p>
+        </div>
+        <div class="analytics-grid">
+          <div class="glass-panel" style="grid-column: span 2; min-height: 200px;">
+            <h3>Prediction Accuracy & Discovery Rate</h3>
+            <div class="chart-placeholder">
+              <span class="placeholder-text">Evolution Data will populate here after the first cycle.</span>
+            </div>
+            <div style="display: flex; gap: var(--space-xl); margin-top: var(--space-lg);">
+              <div>
+                <div style="font-size: var(--text-xs); color: var(--color-text-muted);">Causal Links Discovered</div>
+                <div class="stat-big" id="analytics-links-discovered">0</div>
+              </div>
+              <div>
+                <div style="font-size: var(--text-xs); color: var(--color-text-muted);">Nodes Evolved</div>
+                <div class="stat-big" id="analytics-nodes-evolved">0</div>
+              </div>
+            </div>
+          </div>
+          <!-- Anomaly Feed -->
+          <div class="glass-panel" style="grid-row: span 2;">
+            <h3 style="color: var(--color-red);">Anomaly Detection Feed</h3>
+            <div id="anomaly-feed" style="margin-top: var(--space-md); font-family: var(--font-mono); font-size: var(--text-xs); display: flex; flex-direction: column; gap: var(--space-sm);">
+                <div style="padding: var(--space-sm); border-left: 2px solid var(--color-red-dim); background: rgba(255,51,85,0.05); color: var(--color-text-secondary);">No structural anomalies detected in current baseline.</div>
+            </div>
+          </div>
+          <!-- Confidence Heatmap -->
+          <div class="glass-panel" style="grid-column: span 2;">
+            <h3>Edge Confidence Heatmap</h3>
+            <div style="width: 100%; height: 150px; background: repeating-linear-gradient(45deg, rgba(0, 240, 255, 0.02), rgba(0, 240, 255, 0.02) 10px, transparent 10px, transparent 20px); border: 1px dashed var(--color-border); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; margin-top: var(--space-md);">
+              <span style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted);">Matrix mapping requires completion of Cycle 1 Evolve Phase.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- View 4: Hypothesis Engine -->
+      <section id="view-hypothesis" class="page-view">
+        <div class="page-header">
+          <h2>Hypothesis Engine</h2>
+          <p>Run isolated counterfactual simulations by overriding values across the casual model.</p>
+        </div>
+        <div class="glass-panel" style="max-width: 500px;">
+          <h3 style="color: var(--color-text-secondary); margin-bottom: 20px;">Counterfactual Simulator</h3>
+          <div class="input-group">
+            <label style="color: var(--color-cyan); font-size: 12px; margin-bottom: 4px; display: block;">Target Node ID</label>
+            <input type="text" id="hypothesis-node" placeholder="e.g., brand_perception">
+          </div>
+          <div class="input-group" style="margin-top: 15px;">
+            <label style="color: var(--color-magenta); font-size: 12px; margin-bottom: 4px; display: block;">Override Value</label>
+            <input type="number" step="0.1" id="hypothesis-value" placeholder="e.g., 0.85">
+          </div>
+          <button id="btn-run-hypothesis" class="glass-btn primary" style="margin-top: 20px; width: 100%;">Run Counterfactual Simulation</button>
+        </div>
+      </section>
+
+      <!-- View 5: Ontology Manager -->
+      <section id="view-ontology" class="page-view">
+        <div class="page-header">
+          <h2>Ontology & Data Manager</h2>
+          <p>Direct view of the causal structured nodes, weights, and constraints.</p>
+        </div>
+        <div class="glass-panel" style="overflow-x: auto;">
+          <table class="ontology-table" id="ontology-table">
+            <thead>
+              <tr>
+                <th>Node ID</th>
+                <th>Category</th>
+                <th>Baseline</th>
+                <th>Unit</th>
+              </tr>
+            </thead>
+            <tbody id="ontology-tbody">
+              <!-- Populated dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- View 6: Integration Hub -->
+      <section id="view-integrations" class="page-view">
+        <div class="page-header">
+          <h2>Integration Hub</h2>
+          <p>Live data streams feeding the causal architecture.</p>
+        </div>
+        <div class="glass-panel">
+          <p class="placeholder-text">Coming soon...</p>
+        </div>
+      </section>
+
+      <!-- View 7: Model Logs -->
+      <section id="view-logs" class="page-view">
+        <div class="page-header">
+          <h2>Model Architecture Logs</h2>
+          <p>Historical ledger tracking every structural change to the causal weights over time.</p>
+        </div>
+        <div class="glass-panel">
+          <p class="placeholder-text">Coming soon...</p>
+        </div>
+      </section>
+
+      <!-- View 8: Settings -->
+      <section id="view-settings" class="page-view">
+        <div class="page-header">
+          <h2>Settings & Environment</h2>
+          <p>Manage API bounds, hardware utilization, and security keys.</p>
+        </div>
+        <div class="glass-panel" style="max-width: 600px;">
+          <h3 style="margin-bottom: var(--space-md); color: var(--color-cyan);">API Configuration</h3>
+          <p style="color: var(--color-text-secondary); margin-bottom: var(--space-lg); font-size: var(--text-sm);">
+            LAPLACE uses Gemini 2.5 Flash for autonomous agent operations. Please provide your API key. Keys are strictly cached locally in LocalStorage.
+          </p>
+          <div class="input-group">
+            <input type="password" id="settings-api-key-input" placeholder="Paste Gemini API Key here...">
+          </div>
+          <button id="btn-save-key-settings" class="glass-btn primary" style="margin-top: 10px;">Save Configuration</button>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Loading Screen (Global) -->
+  <div id="loading-screen">
+    <div class="loading-content">
+      <div class="loading-logo">
+        <span class="logo-letter" style="--i:0">L</span>
+        <span class="logo-letter" style="--i:1">A</span>
+        <span class="logo-letter" style="--i:2">P</span>
+        <span class="logo-letter" style="--i:3">L</span>
+        <span class="logo-letter" style="--i:4">A</span>
+        <span class="logo-letter" style="--i:5">C</span>
+        <span class="logo-letter" style="--i:6">E</span>
+      </div>
+      <p class="loading-subtitle">Logical Architecture for Predictive Learning<br/>and Autonomous Causal Evolution</p>
+      <div class="loading-bar">
+        <div class="loading-bar-fill"></div>
+      </div>
+      <p class="loading-status">Initializing causal engine...</p>
     </div>
   </div>
 

@@ -1,5 +1,5 @@
 /**
- * EvolutionEngine.js — The crown jewel of L.A.P.L.A.C.E.
+ * EvolutionEngine.js — The crown jewel of LAPLACE
  * Manages the full evolution loop: predict → compare → correct → prove improvement.
  */
 import { CausalMath } from './CausalMath.js';

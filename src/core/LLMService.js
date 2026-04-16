@@ -34,7 +34,7 @@ export class LLMService {
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${this.activeKey}`;
 
     const systemPrompt = `
-You are the ${agentIdentity.name} in the L.A.P.L.A.C.E. Autonomous Causal Intelligence system.
+You are the ${agentIdentity.name} in the LAPLACE Autonomous Causal Intelligence system.
 Your role: ${agentIdentity.description}
 
 You are currently executing the step: ${stepName}.

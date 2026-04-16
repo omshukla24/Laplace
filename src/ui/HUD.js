@@ -37,11 +37,32 @@ export class HUD {
     this.metrics.register('metric-accuracy', 0, { suffix: '%', decimals: 1 });
     this.metrics.register('metric-evolution', 0);
 
-    // Timeline steps
     this.timelineSteps = ['init', 'analyze', 'whatif', 'intervene', 'reveal', 'evolve'];
     this.currentStepIndex = 0;
 
     this.initTerminalToggle();
+    this.initNavigation();
+  }
+
+  initNavigation() {
+    const navBtns = document.querySelectorAll('.nav-btn');
+    const pageViews = document.querySelectorAll('.page-view');
+
+    navBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (this.audioEngine) this.audioEngine.playClick();
+        
+        // Remove active state
+        navBtns.forEach(b => b.classList.remove('active'));
+        pageViews.forEach(p => p.classList.remove('active'));
+        
+        // Add active state
+        btn.classList.add('active');
+        const targetId = btn.getAttribute('data-target');
+        const targetView = document.getElementById(targetId);
+        if (targetView) targetView.classList.add('active');
+      });
+    });
   }
 
   setupAuthModal(llmService, onKeySaved) {
@@ -65,11 +86,39 @@ export class HUD {
       }
     });
 
+    // Wire up the new Settings Page inputs similarly
+    const settingsBtn = document.getElementById('btn-save-key-settings');
+    const settingsInput = document.getElementById('settings-api-key-input');
+    if (settingsBtn && settingsInput) {
+      settingsBtn.addEventListener('click', () => {
+        const key = settingsInput.value.trim();
+        if (key) {
+          llmService.setLocalKey(key);
+          if (this.audioEngine) this.audioEngine.playSuccess();
+          this.elements.apiKeyInput.value = key; // Sync with original modal just in case
+          settingsBtn.textContent = "Configuration Saved";
+          setTimeout(() => settingsBtn.textContent = "Save Configuration", 2000);
+          if (onKeySaved) onKeySaved();
+        }
+      });
+      // Initialize it with any existing key
+      settingsInput.value = llmService.localApiKey;
+    }
+
     // Initialize input with existing key if any
     this.elements.apiKeyInput.value = llmService.localApiKey;
   }
 
-  showAuthModal() {
+  showAuthModal(isError = false) {
+    const title = document.getElementById('auth-modal-title');
+    const desc = document.getElementById('auth-modal-desc');
+    if (isError && title && desc) {
+      title.textContent = "API Quota Reached";
+      desc.textContent = "LAPLACE default project limits reached. Please provide an API key to continue operations.";
+    } else if (title && desc) {
+      title.textContent = "API Configuration";
+      desc.textContent = "LAPLACE uses Gemini 2.5 Flash for autonomous agent operations. Please provide your API key to enable causal inference.";
+    }
     this.elements.authModal.classList.remove('hidden');
   }
 
@@ -116,6 +165,13 @@ export class HUD {
     if (this.elements.agentAvatar) {
       this.elements.agentAvatar.className = 'agent-avatar ' + agentClass;
     }
+    
+    // Mirror to dashboard
+    const daStatus = document.getElementById('console-agent-status');
+    if (daStatus) {
+      daStatus.textContent = `${name}: ${statusText}`;
+      daStatus.style.color = 'var(--color-cyan)';
+    }
 
     // Clear previous thoughts
     this.typewriter.clear();
@@ -132,6 +188,16 @@ export class HUD {
     if (this.elements.agentProgressBar) {
       this.elements.agentProgressBar.style.width = `${percent * 100}%`;
     }
+    
+    // Mirror to dashboard
+    const daProgress = document.getElementById('console-agent-progress');
+    if (daProgress) {
+        daProgress.style.height = '4px';
+        daProgress.style.background = 'var(--color-cyan)';
+        daProgress.style.width = `${percent * 100}%`;
+        daProgress.style.marginTop = 'var(--space-md)';
+        daProgress.style.transition = 'width 0.3s';
+    }
   }
 
   resetAgent() {
@@ -140,6 +206,14 @@ export class HUD {
       this.elements.agentStatus.textContent = 'Awaiting command';
       this.elements.agentStatus.classList.remove('active');
     }
+    
+    // Mirror to dashboard
+    const daStatus = document.getElementById('console-agent-status');
+    if (daStatus) {
+      daStatus.textContent = 'System Idle: Awaiting logic';
+      daStatus.style.color = 'var(--color-text-muted)';
+    }
+    
     this.setAgentProgress(0);
   }
 
@@ -151,14 +225,34 @@ export class HUD {
       const body = document.getElementById('terminal-body');
       if (body) body.scrollTop = body.scrollHeight;
     }
+    
+    // Also append to the new massive 2D dashboard console
+    const fullOutput = document.getElementById('full-terminal-output');
+    if (fullOutput) {
+      fullOutput.textContent += '\n' + text;
+      const fullBody = document.getElementById('full-terminal-body');
+      if (fullBody) fullBody.scrollTop = fullBody.scrollHeight;
+    }
   }
 
   // ========= Metrics =========
 
   updateMetrics(nodes, edges, accuracy, evolutionCycle) {
-    if (nodes !== undefined) this.metrics.animateTo('metric-nodes', nodes);
-    if (edges !== undefined) this.metrics.animateTo('metric-edges', edges);
-    if (accuracy !== undefined) this.metrics.animateTo('metric-accuracy', accuracy);
+    if (nodes !== undefined) {
+      this.metrics.animateTo('metric-nodes', nodes);
+      const dashNodes = document.querySelectorAll('.stat-big')[1];
+      if (dashNodes) dashNodes.textContent = nodes;
+    }
+    if (edges !== undefined) {
+      this.metrics.animateTo('metric-edges', edges);
+      const dashEdges = document.querySelectorAll('.stat-big')[0];
+      if (dashEdges) dashEdges.textContent = edges;
+    }
+    if (accuracy !== undefined) {
+      this.metrics.animateTo('metric-accuracy', accuracy);
+      const dashAccChart = document.querySelector('.chart-placeholder .placeholder-text');
+      if (dashAccChart) dashAccChart.textContent = `Latest accuracy: ${accuracy.toFixed(1)}%`;
+    }
     if (evolutionCycle !== undefined) this.metrics.animateTo('metric-evolution', evolutionCycle);
   }
 
