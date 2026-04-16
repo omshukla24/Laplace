@@ -26,11 +26,11 @@
 :root {
   /* Color Palette — True Black & White Glassmorphism */
   --color-bg: #000000;
-  --color-surface: rgba(14, 14, 14, 0.65);
-  --color-surface-hover: rgba(28, 28, 28, 0.8);
+  --color-surface: rgba(255, 255, 255, 0.03);
+  --color-surface-hover: rgba(255, 255, 255, 0.08);
   --color-border: rgba(255, 255, 255, 0.08);
   --color-border-hover: rgba(255, 255, 255, 0.15);
-  --glass-blur: blur(16px);
+  --glass-blur: blur(24px);
 
   /* Typography Colors */
   --color-text-primary: #ededed;
@@ -135,7 +135,7 @@ body {
 #sidebar-nav {
   width: 250px;
   height: 100vh;
-  background: rgba(10, 10, 10, 0.6);
+  background: rgba(255, 255, 255, 0.02);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   border-right: 1px solid var(--color-border);
@@ -642,21 +642,57 @@ input:focus {
 }
 
 /* Loading Screen */
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+#loading-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
 #loading-screen {
-  background: var(--color-bg);
-  color: var(--color-text-primary);
+  background: #000000;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  transition: opacity 0.8s ease-in-out;
 }
 .loading-logo {
   font-family: var(--font-sans);
-  font-size: 2rem;
-  letter-spacing: -0.02em;
+  font-size: 3.5rem;
+  font-weight: 600;
+  letter-spacing: 0.2rem;
+  margin-bottom: 24px;
+}
+.loading-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  line-height: 1.6;
+  margin-bottom: 40px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 .loading-bar {
-  background: var(--color-border);
+  background: rgba(255, 255, 255, 0.1);
   height: 2px;
+  width: 300px;
+  border-radius: 2px;
+  overflow: hidden;
 }
 .loading-bar-fill {
-  background: var(--color-text-primary);
+  background: #ffffff;
+  height: 100%;
+  width: 0%;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Console View */
