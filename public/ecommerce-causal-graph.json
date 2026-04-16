@@ -1,0 +1,65 @@
+{
+  "metadata": {
+    "domain": "E-Commerce Revenue Architecture",
+    "version": "1.0.0",
+    "description": "SCM representing user flow, infrastructure latency, and eventual cart conversion in an online store."
+  },
+  "nodes": [
+    { "id": "server_latency", "label": "Server Latency", "category": "process", "baseline": 0.65, "unit": "ms", "description": "Average response time of the primary database" },
+    { "id": "traffic_volume", "label": "Traffic Volume", "category": "input", "baseline": 0.80, "unit": "sessions", "description": "Active concurrent user sessions" },
+    { "id": "ui_load_time", "label": "UI Load Time", "category": "quality", "baseline": 0.70, "unit": "seconds", "description": "Time to interactive for the storefront" },
+    { "id": "bounce_rate", "label": "Bounce Rate", "category": "outcome", "baseline": 0.45, "unit": "percent", "description": "Percentage of users leaving after 1 page" },
+    { "id": "search_usage", "label": "Search Usage", "category": "process", "baseline": 0.55, "unit": "queries/sec", "description": "Usage of the product search bar" },
+    { "id": "cart_adds", "label": "Add to Cart Rate", "category": "output", "baseline": 0.40, "unit": "percent", "description": "Percentage of sessions containing a cart addition" },
+    { "id": "checkout_drops", "label": "Checkout Dropoff", "category": "outcome", "baseline": 0.60, "unit": "percent", "description": "Users abandoning cart at checkout phase" },
+    { "id": "payment_failure", "label": "Gateway Failures", "category": "quality", "baseline": 0.15, "unit": "percent", "description": "Transaction failures from payment gateway" },
+    { "id": "cart_conversion", "label": "Conversion Rate", "category": "business", "baseline": 0.35, "unit": "percent", "description": "Final successful purchase relative to traffic" },
+    { "id": "average_order", "label": "AOV", "category": "business", "baseline": 0.50, "unit": "dollars", "description": "Average Order Value (Normalized)" },
+    { "id": "daily_revenue", "label": "Daily Revenue", "category": "business", "baseline": 0.60, "unit": "index", "description": "Total generated revenue indexed" }
+  ],
+  "edges": [
+    { "source": "traffic_volume", "target": "server_latency", "weight": 0.7, "type": "positive", "description": "More users increases DB load and latency" },
+    { "source": "server_latency", "target": "ui_load_time", "weight": 0.8, "type": "positive", "description": "Backend slowness causes front-end delays" },
+    { "source": "ui_load_time", "target": "bounce_rate", "weight": 0.9, "type": "positive", "description": "Slow pages drastically increase bounce behavior" },
+    { "source": "ui_load_time", "target": "search_usage", "weight": -0.4, "type": "negative", "description": "Frustrated users don't engage with search" },
+    { "source": "search_usage", "target": "cart_adds", "weight": 0.6, "type": "positive", "description": "Users who search are highly intentional buyers" },
+    { "source": "bounce_rate", "target": "cart_adds", "weight": -0.8, "type": "negative", "description": "Bounced users inherently cannot add to cart" },
+    { "source": "cart_adds", "target": "checkout_drops", "weight": 0.3, "type": "positive", "description": "More carts logically create more opportunity for drops" },
+    { "source": "server_latency", "target": "payment_failure", "weight": 0.5, "type": "positive", "description": "High latency can cause payment API timeouts" },
+    { "source": "checkout_drops", "target": "cart_conversion", "weight": -0.9, "type": "negative", "description": "Checkout drops are the antithesis of conversion" },
+    { "source": "payment_failure", "target": "checkout_drops", "weight": 0.8, "type": "positive", "description": "Failed payments look like checkout abandonment" },
+    { "source": "traffic_volume", "target": "daily_revenue", "weight": 0.4, "type": "positive", "description": "Baseline traffic sets revenue ceiling" },
+    { "source": "cart_conversion", "target": "daily_revenue", "weight": 0.8, "type": "positive", "description": "Conversions drive the core revenue metric" },
+    { "source": "average_order", "target": "daily_revenue", "weight": 0.6, "type": "positive", "description": "Higher basket sizes multiply conversion value" }
+  ],
+  "temporalStates": {
+    "T0": {
+      "label": "Baseline Target",
+      "description": "Standard E-Commerce Thursday Load",
+      "values": {
+        "server_latency": 0.65, "traffic_volume": 0.80, "ui_load_time": 0.70,
+        "bounce_rate": 0.45, "search_usage": 0.55, "cart_adds": 0.40,
+        "checkout_drops": 0.60, "payment_failure": 0.15, "cart_conversion": 0.35,
+        "average_order": 0.50, "daily_revenue": 0.60
+      }
+    },
+    "T_mock": {
+      "label": "Demo Graph",
+      "description": "Mock file",
+      "values": {
+        "server_latency": 0.65, "traffic_volume": 0.80, "ui_load_time": 0.70,
+        "bounce_rate": 0.45, "search_usage": 0.55, "cart_adds": 0.40,
+        "checkout_drops": 0.60, "payment_failure": 0.15, "cart_conversion": 0.35,
+        "average_order": 0.50, "daily_revenue": 0.60
+      }
+    }
+  },
+  "categoryColors": {
+    "input": "#00A3FF",
+    "process": "#F2B600",
+    "quality": "#FF6363",
+    "output": "#34D59A",
+    "outcome": "#5E6AD2",
+    "business": "#EDEDED"
+  }
+}
