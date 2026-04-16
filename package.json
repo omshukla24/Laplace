@@ -1,0 +1,19 @@
+{
+  "name": "laplace",
+  "private": true,
+  "version": "1.0.0",
+  "description": "L.A.P.L.A.C.E. — Logical Architecture for Predictive Learning and Autonomous Causal Evolution",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "three": "^0.170.0",
+    "d3-force-3d": "^3.0.5"
+  },
+  "devDependencies": {
+    "vite": "^6.3.1"
+  }
+}

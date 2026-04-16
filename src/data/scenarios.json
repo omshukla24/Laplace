@@ -1,0 +1,47 @@
+{
+  "defaultScenario": "incident_spike",
+  "scenarios": {
+    "incident_spike": {
+      "title": "Why is Incident Rate Spiking?",
+      "description": "Production incidents have increased 70% this quarter. Find the root cause and fix it.",
+      "steps": {
+        "analyze": {
+          "target_node": "incident_rate",
+          "trace_path": ["incident_rate", "bug_density", "code_churn", "test_coverage"],
+          "highlight_edges": [
+            { "source": "bug_density", "target": "incident_rate" },
+            { "source": "code_churn", "target": "bug_density" },
+            { "source": "test_coverage", "target": "bug_density" }
+          ],
+          "root_cause": "test_coverage"
+        },
+        "whatif": {
+          "intervention_node": "test_coverage",
+          "intervention_value": 0.85,
+          "affected_nodes": ["bug_density", "build_time", "deploy_frequency", "incident_rate", "mttr", "team_velocity", "system_uptime", "revenue_impact"],
+          "ripple_source": "test_coverage"
+        },
+        "intervene": {
+          "apply_state": "T1_predicted",
+          "locked_node": "test_coverage",
+          "transform_nodes": ["bug_density", "incident_rate", "system_uptime", "revenue_impact"]
+        },
+        "reveal": {
+          "apply_state": "T_actual",
+          "comparison_nodes": ["bug_density", "build_time", "deploy_frequency", "incident_rate", "mttr", "team_velocity", "system_uptime", "revenue_impact"]
+        },
+        "evolve": {
+          "weight_corrections": [
+            { "source": "test_coverage", "target": "bug_density", "old_weight": -0.7, "new_weight": -0.65 },
+            { "source": "bug_density", "target": "incident_rate", "old_weight": 0.8, "new_weight": 0.75 },
+            { "source": "test_coverage", "target": "build_time", "old_weight": 0.4, "new_weight": 0.35 },
+            { "source": "incident_rate", "target": "system_uptime", "old_weight": -0.8, "new_weight": -0.78 }
+          ],
+          "accuracy_before": 93.5,
+          "accuracy_after": 96.7,
+          "evolution_cycle": 1
+        }
+      }
+    }
+  }
+}

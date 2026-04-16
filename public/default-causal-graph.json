@@ -1,0 +1,103 @@
+{
+  "metadata": {
+    "domain": "Software System Health",
+    "version": "1.0.0",
+    "description": "Structural Causal Model representing causal relationships in a software engineering ecosystem"
+  },
+  "nodes": [
+    { "id": "code_churn", "label": "Code Churn", "category": "input", "baseline": 0.72, "unit": "changes/day", "description": "Rate of code modifications across the codebase" },
+    { "id": "pr_review_time", "label": "PR Review Time", "category": "process", "baseline": 0.65, "unit": "hours", "description": "Average time to review pull requests" },
+    { "id": "bug_density", "label": "Bug Density", "category": "quality", "baseline": 0.58, "unit": "bugs/kloc", "description": "Number of bugs per thousand lines of code" },
+    { "id": "test_coverage", "label": "Test Coverage", "category": "quality", "baseline": 0.45, "unit": "percent", "description": "Percentage of codebase covered by automated tests" },
+    { "id": "build_time", "label": "Build Time", "category": "process", "baseline": 0.60, "unit": "minutes", "description": "Average CI/CD build duration" },
+    { "id": "deploy_frequency", "label": "Deploy Frequency", "category": "output", "baseline": 0.40, "unit": "deploys/week", "description": "Number of production deployments per week" },
+    { "id": "incident_rate", "label": "Incident Rate", "category": "outcome", "baseline": 0.68, "unit": "incidents/week", "description": "Production incidents per week" },
+    { "id": "mttr", "label": "MTTR", "category": "outcome", "baseline": 0.55, "unit": "hours", "description": "Mean Time To Recovery from incidents" },
+    { "id": "team_velocity", "label": "Team Velocity", "category": "output", "baseline": 0.50, "unit": "points/sprint", "description": "Story points completed per sprint" },
+    { "id": "tech_debt", "label": "Tech Debt Score", "category": "quality", "baseline": 0.62, "unit": "score", "description": "Accumulated technical debt measurement" },
+    { "id": "system_uptime", "label": "System Uptime", "category": "outcome", "baseline": 0.92, "unit": "percent", "description": "Percentage of time system is operational" },
+    { "id": "revenue_impact", "label": "Revenue Impact", "category": "business", "baseline": 0.75, "unit": "index", "description": "Normalized revenue performance index" }
+  ],
+  "edges": [
+    { "source": "code_churn", "target": "bug_density", "weight": 0.7, "type": "positive", "description": "Higher code churn increases bug density" },
+    { "source": "code_churn", "target": "pr_review_time", "weight": 0.5, "type": "positive", "description": "More changes mean longer review cycles" },
+    { "source": "code_churn", "target": "tech_debt", "weight": 0.6, "type": "positive", "description": "Rapid changes accumulate technical debt" },
+    { "source": "pr_review_time", "target": "bug_density", "weight": -0.4, "type": "negative", "description": "Thorough reviews catch bugs before merge" },
+    { "source": "pr_review_time", "target": "deploy_frequency", "weight": -0.5, "type": "negative", "description": "Slower reviews reduce deployment cadence" },
+    { "source": "bug_density", "target": "incident_rate", "weight": 0.8, "type": "positive", "description": "More bugs lead to more production incidents" },
+    { "source": "bug_density", "target": "build_time", "weight": 0.3, "type": "positive", "description": "Bug fixes increase build complexity" },
+    { "source": "test_coverage", "target": "bug_density", "weight": -0.7, "type": "negative", "description": "Higher test coverage catches bugs earlier" },
+    { "source": "test_coverage", "target": "build_time", "weight": 0.4, "type": "positive", "description": "More tests increase build duration" },
+    { "source": "test_coverage", "target": "deploy_frequency", "weight": 0.3, "type": "positive", "description": "Confidence from tests enables faster deploys" },
+    { "source": "build_time", "target": "deploy_frequency", "weight": -0.4, "type": "negative", "description": "Longer builds slow deployment pipeline" },
+    { "source": "deploy_frequency", "target": "team_velocity", "weight": 0.5, "type": "positive", "description": "Faster feedback loops boost team velocity" },
+    { "source": "incident_rate", "target": "mttr", "weight": 0.6, "type": "positive", "description": "More incidents increase mean recovery time" },
+    { "source": "incident_rate", "target": "system_uptime", "weight": -0.8, "type": "negative", "description": "Incidents directly reduce system uptime" },
+    { "source": "incident_rate", "target": "team_velocity", "weight": -0.5, "type": "negative", "description": "Firefighting reduces delivery velocity" },
+    { "source": "tech_debt", "target": "build_time", "weight": 0.5, "type": "positive", "description": "Technical debt increases build complexity" },
+    { "source": "system_uptime", "target": "revenue_impact", "weight": 0.9, "type": "positive", "description": "Uptime directly drives revenue" },
+    { "source": "team_velocity", "target": "revenue_impact", "weight": 0.6, "type": "positive", "description": "Faster delivery drives business value" }
+  ],
+  "temporalStates": {
+    "T0": {
+      "label": "Baseline State",
+      "description": "Current state of the software system",
+      "values": {
+        "code_churn": 0.72, "pr_review_time": 0.65, "bug_density": 0.58,
+        "test_coverage": 0.45, "build_time": 0.60, "deploy_frequency": 0.40,
+        "incident_rate": 0.68, "mttr": 0.55, "team_velocity": 0.50,
+        "tech_debt": 0.62, "system_uptime": 0.92, "revenue_impact": 0.75
+      }
+    },
+    "T1_predicted": {
+      "label": "Predicted State (After Intervention)",
+      "description": "L.A.P.L.A.C.E. prediction after increasing test coverage to 85%",
+      "intervention": { "node": "test_coverage", "from": 0.45, "to": 0.85 },
+      "values": {
+        "code_churn": 0.72, "pr_review_time": 0.65, "bug_density": 0.25,
+        "test_coverage": 0.85, "build_time": 0.76, "deploy_frequency": 0.55,
+        "incident_rate": 0.30, "mttr": 0.37, "team_velocity": 0.68,
+        "tech_debt": 0.62, "system_uptime": 0.97, "revenue_impact": 0.88
+      }
+    },
+    "T_actual": {
+      "label": "Ground Truth (Revealed)",
+      "description": "What actually happened — used to measure prediction accuracy",
+      "values": {
+        "code_churn": 0.72, "pr_review_time": 0.65, "bug_density": 0.30,
+        "test_coverage": 0.85, "build_time": 0.72, "deploy_frequency": 0.52,
+        "incident_rate": 0.35, "mttr": 0.40, "team_velocity": 0.65,
+        "tech_debt": 0.62, "system_uptime": 0.96, "revenue_impact": 0.86
+      }
+    },
+    "T1_predicted_techdebt": {
+      "label": "Predicted State (After Interference)",
+      "description": "L.A.P.L.A.C.E. prediction after lowering PR Review Time to 0.30",
+      "intervention": { "node": "pr_review_time", "from": 0.65, "to": 0.30 },
+      "values": {
+        "code_churn": 0.72, "pr_review_time": 0.30, "bug_density": 0.58,
+        "test_coverage": 0.45, "build_time": 0.60, "deploy_frequency": 0.65,
+        "incident_rate": 0.68, "mttr": 0.55, "team_velocity": 0.70,
+        "tech_debt": 0.62, "system_uptime": 0.92, "revenue_impact": 0.85
+      }
+    },
+    "T_actual_techdebt": {
+      "label": "Ground Truth (Revealed)",
+      "description": "What actually happened — used to measure prediction accuracy",
+      "values": {
+        "code_churn": 0.72, "pr_review_time": 0.30, "bug_density": 0.58,
+        "test_coverage": 0.45, "build_time": 0.60, "deploy_frequency": 0.60,
+        "incident_rate": 0.68, "mttr": 0.55, "team_velocity": 0.68,
+        "tech_debt": 0.62, "system_uptime": 0.92, "revenue_impact": 0.83
+      }
+    }
+  },
+  "categoryColors": {
+    "input": "#ff006e",
+    "process": "#8b5cf6",
+    "quality": "#00f0ff",
+    "output": "#00ff88",
+    "outcome": "#ffd700",
+    "business": "#ff8c00"
+  }
+}

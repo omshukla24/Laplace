@@ -1,0 +1,49 @@
+{
+  "agents": {
+    "analyst": {
+      "name": "Analyst Agent", "icon": "search", "class": "analyst", "description": "Traces causal pathways to identify root causes",
+      "thoughts": [
+        { "type": "thinking", "text": "Scanning causal graph for anomalous nodes...", "delay": 800 },
+        { "type": "thinking", "text": "Incident Rate is at 0.68 — significantly above healthy threshold (0.30)", "delay": 1200 },
+        { "type": "thinking", "text": "Initiating backward causal trace from Incident Rate...", "delay": 1000 },
+        { "type": "action", "text": "TRACE: Incident Rate ← Bug Density (weight: 0.8, STRONG)", "delay": 800 },
+        { "type": "thinking", "text": "Bug Density at 0.58 — elevated. Continuing trace...", "delay": 1000 },
+        { "type": "action", "text": "TRACE: Bug Density ← Code Churn (weight: 0.7, STRONG)", "delay": 800 },
+        { "type": "action", "text": "TRACE: Bug Density ← Test Coverage (weight: -0.7, PROTECTIVE)", "delay": 800 },
+        { "type": "thinking", "text": "Test Coverage is only 0.45 — critically low protective factor", "delay": 1200 },
+        { "type": "result", "text": "ROOT CAUSE IDENTIFIED: Test Coverage (0.45) is the primary controllable lever.", "delay": 0 }
+      ]
+    },
+    "counterfactual": {
+      "name": "Counterfactual Agent", "icon": "question", "class": "counterfactual", "description": "Simulates what-if scenarios through causal propagation",
+      "thoughts": [
+        { "type": "thinking", "text": "Constructing counterfactual scenario...", "delay": 800 },
+        { "type": "action", "text": "INTERVENTION: do(Test Coverage = 0.85)", "delay": 1000 },
+        { "type": "thinking", "text": "Propagating causal effects...", "delay": 1200 },
+        { "type": "action", "text": "PROPAGATE: Bug Density: 0.58 → 0.25", "delay": 800 },
+        { "type": "action", "text": "PROPAGATE: Incident Rate: 0.68 → 0.30", "delay": 800 },
+        { "type": "result", "text": "COUNTERFACTUAL COMPLETE: Increasing Test Coverage to 85% predicts 56% incident reduction.", "delay": 0 }
+      ]
+    },
+    "intervention": {
+      "name": "Intervention Agent", "icon": "deploy", "class": "intervention", "description": "Deploys recommended fixes to the live system",
+      "thoughts": [
+        { "type": "thinking", "text": "Evaluating intervention feasibility...", "delay": 800 },
+        { "type": "action", "text": "DEPLOYING: Modifying causal graph weights in real-time...", "delay": 1500 },
+        { "type": "action", "text": "UPDATE: test_coverage = 0.85 (locked)", "delay": 600 },
+        { "type": "result", "text": "INTERVENTION DEPLOYED: System state updated.", "delay": 0 }
+      ]
+    },
+    "evolution": {
+      "name": "Evolution Agent", "icon": "evolve", "class": "evolution", "description": "Compares predictions to reality",
+      "thoughts": [
+        { "type": "thinking", "text": "Ingesting ground truth data...", "delay": 800 },
+        { "type": "action", "text": "COMPARE: Bug Density — predicted: 0.25, actual: 0.30", "delay": 800 },
+        { "type": "thinking", "text": "Computing overall prediction accuracy...", "delay": 1200 },
+        { "type": "action", "text": "EVOLVE: Applying gradient corrections to edge weights...", "delay": 1500 },
+        { "type": "action", "text": "ADJUST: test_coverage → bug_density: -0.7 → -0.65", "delay": 800 },
+        { "type": "result", "text": "EVOLUTION COMPLETE: Prediction accuracy improved from 93.5% → 96.7%. Intelligence Score: +1.", "delay": 0 }
+      ]
+    }
+  }
+}

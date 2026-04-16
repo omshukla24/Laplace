@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>L.A.P.L.A.C.E. — Autonomous Causal Intelligence</title>
+  <meta name="description" content="Logical Architecture for Predictive Learning and Autonomous Causal Evolution. An AI platform that discovers causal structure, tests interventions, and evolves its own intelligence." />
+  <meta name="theme-color" content="#0a0e1a" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/styles/index.css" />
+</head>
+<body>
+  <!-- Three.js Canvas Mount -->
+  <div id="canvas-container"></div>
+
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <div class="loading-content">
+      <div class="loading-logo">
+        <span class="logo-letter" style="--i:0">L</span>
+        <span class="logo-dot">.</span>
+        <span class="logo-letter" style="--i:1">A</span>
+        <span class="logo-dot">.</span>
+        <span class="logo-letter" style="--i:2">P</span>
+        <span class="logo-dot">.</span>
+        <span class="logo-letter" style="--i:3">L</span>
+        <span class="logo-dot">.</span>
+        <span class="logo-letter" style="--i:4">A</span>
+        <span class="logo-dot">.</span>
+        <span class="logo-letter" style="--i:5">C</span>
+        <span class="logo-dot">.</span>
+        <span class="logo-letter" style="--i:6">E</span>
+        <span class="logo-dot last-dot">.</span>
+      </div>
+      <p class="loading-subtitle">Logical Architecture for Predictive Learning<br/>and Autonomous Causal Evolution</p>
+      <div class="loading-bar">
+        <div class="loading-bar-fill"></div>
+      </div>
+      <p class="loading-status">Initializing causal engine...</p>
+    </div>
+  </div>
+
+  <!-- HUD Overlay -->
+  <div id="hud-overlay">
+    <!-- Top Bar -->
+    <header id="hud-topbar">
+      <div class="topbar-left">
+        <div class="brand-container">
+          <h1 class="brand-name">L.A.P.L.A.C.E.</h1>
+          <span class="brand-tagline">Autonomous Causal Intelligence</span>
+        </div>
+      </div>
+      <div class="topbar-right" id="metrics-dashboard">
+        <button id="btn-settings" class="icon-btn" title="API Settings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </button>
+        <div class="metric-card" id="metric-nodes">
+          <span class="metric-value" data-target="0">0</span>
+          <span class="metric-label">Nodes Active</span>
+        </div>
+        <div class="metric-card" id="metric-edges">
+          <span class="metric-value" data-target="0">0</span>
+          <span class="metric-label">Causal Links</span>
+        </div>
+        <div class="metric-card" id="metric-accuracy">
+          <span class="metric-value" data-target="0">0<span class="metric-unit">%</span></span>
+          <span class="metric-label">Prediction Accuracy</span>
+        </div>
+        <div class="metric-card accent" id="metric-evolution">
+          <span class="metric-value" data-target="0">0</span>
+          <span class="metric-label">Evolution Cycle</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Auth Modal (Hidden by default) -->
+    <div id="auth-modal" class="modal-overlay hidden">
+      <div class="modal-card glass-panel">
+        <h2>Bring Your Own Key</h2>
+        <p>L.A.P.L.A.C.E. powers its autonomous agents with Gemini 2.5 Flash.</p>
+        <div class="input-group">
+          <input type="password" id="api-key-input" placeholder="Paste Gemini API Key here...">
+        </div>
+        <p class="modal-hint">Key is saved securely to your browser's LocalStorage and never sent to our servers.</p>
+        <div class="modal-actions">
+          <button id="btn-save-key" class="glass-btn primary">Save & Connect</button>
+          <button id="btn-close-modal" class="glass-btn outline">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Agent Panel (Left) -->
+    <aside id="agent-panel">
+      <div class="panel-header">
+        <div class="agent-avatar" id="agent-avatar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 6v6l4 2"/>
+          </svg>
+        </div>
+        <div class="agent-info">
+          <h2 id="agent-name">System Idle</h2>
+          <span class="agent-status" id="agent-status">Awaiting command</span>
+        </div>
+      </div>
+      <div class="panel-body" id="agent-thoughts">
+        <div class="thought-line initial">
+          <span class="thought-prefix">&gt;</span>
+          <span class="thought-text">Causal graph loaded. Ready for analysis.</span>
+        </div>
+      </div>
+      <div class="panel-footer">
+        <div class="agent-progress">
+          <div class="agent-progress-bar" id="agent-progress-bar"></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Command Terminal (Bottom Left, collapsible) -->
+    <div id="command-terminal" class="collapsed">
+      <div class="terminal-header" id="terminal-toggle">
+        <span class="terminal-title">⬡ Agent Reasoning Log</span>
+        <span class="terminal-toggle-icon">▲</span>
+      </div>
+      <div class="terminal-body" id="terminal-body">
+        <pre id="terminal-output">L.A.P.L.A.C.E. v1.0 — Causal Intelligence Engine
+Initializing structural causal model...
+SCM loaded: 12 variables, 18 causal links
+Ready.
+</pre>
+      </div>
+    </div>
+
+    <!-- Timeline (Bottom Center) -->
+    <div id="timeline-bar">
+      <div class="timeline-track">
+        <div class="timeline-step completed" data-step="init" id="tl-init">
+          <div class="step-dot"></div>
+          <span class="step-label">Init</span>
+        </div>
+        <div class="timeline-connector"></div>
+        <div class="timeline-step" data-step="analyze" id="tl-analyze">
+          <div class="step-dot"></div>
+          <span class="step-label">Analyze</span>
+        </div>
+        <div class="timeline-connector"></div>
+        <div class="timeline-step" data-step="whatif" id="tl-whatif">
+          <div class="step-dot"></div>
+          <span class="step-label">What-If</span>
+        </div>
+        <div class="timeline-connector"></div>
+        <div class="timeline-step" data-step="intervene" id="tl-intervene">
+          <div class="step-dot"></div>
+          <span class="step-label">Intervene</span>
+        </div>
+        <div class="timeline-connector"></div>
+        <div class="timeline-step" data-step="reveal" id="tl-reveal">
+          <div class="step-dot"></div>
+          <span class="step-label">Reveal</span>
+        </div>
+        <div class="timeline-connector"></div>
+        <div class="timeline-step" data-step="evolve" id="tl-evolve">
+          <div class="step-dot"></div>
+          <span class="step-label">Evolve</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Control Bar (Bottom Right) -->
+    <div id="control-bar">
+      <button class="ctrl-btn" id="btn-analyze" title="Run root-cause analysis">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <span>Analyze</span>
+      </button>
+      <button class="ctrl-btn" id="btn-whatif" title="Run counterfactual scenario" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="12" r="10"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span>What If?</span>
+      </button>
+      <button class="ctrl-btn" id="btn-intervene" title="Deploy intervention" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        <span>Intervene</span>
+      </button>
+      <button class="ctrl-btn" id="btn-reveal" title="Reveal ground truth" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span>Reveal</span>
+      </button>
+      <button class="ctrl-btn accent" id="btn-evolve" title="Evolve intelligence" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
+        <span>Evolve</span>
+      </button>
+      <div class="ctrl-divider"></div>
+      <button class="ctrl-btn auto-demo" id="btn-autodemo" title="Run full cinematic demo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <span>Auto Demo</span>
+      </button>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
