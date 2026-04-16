@@ -247,4 +247,4 @@ LAPLACE uses a **Bring-Your-Own-Key (BYOK)** architecture:
 
 ## 📄 License
 
-Built for the **Google Tech Builders Program Hackathon 2025**.
+MIT License.
