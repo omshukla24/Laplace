@@ -78,12 +78,14 @@
     <!-- Auth Modal (Hidden by default) -->
     <div id="auth-modal" class="modal-overlay hidden">
       <div class="modal-card glass-panel">
-        <h2>Bring Your Own Key</h2>
-        <p>L.A.P.L.A.C.E. powers its autonomous agents with Gemini 2.5 Flash.</p>
+        <h2>API Quota Reached</h2>
+        <p>L.A.P.L.A.C.E. powers its autonomous agents with Gemini 2.5 Flash. Our default project API limits have been reached, but you can continue seamlessly by providing your own API key.</p>
         <div class="input-group">
           <input type="password" id="api-key-input" placeholder="Paste Gemini API Key here...">
         </div>
-        <p class="modal-hint">Key is saved securely to your browser's LocalStorage and never sent to our servers.</p>
+        <p class="modal-hint">
+          <strong>100% Safe & Secure Ecosystem:</strong> Your API key is cached locally in your browser's LocalStorage. It never leaves your machine and is routed directly to Google APIs. We never see, store, or transmit your key.
+        </p>
         <div class="modal-actions">
           <button id="btn-save-key" class="glass-btn primary">Save & Connect</button>
           <button id="btn-close-modal" class="glass-btn outline">Cancel</button>
