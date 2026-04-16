@@ -1,52 +1,83 @@
-# L.A.P.L.A.C.E.
+# LAPLACE
+### Logical Architecture for Predictive Learning and Autonomous Causal Evolution
 
-**L**ogical **A**rchitecture for **P**redictive **L**earning and **A**utonomous **C**ausal **E**volution.
+LAPLACE is an enterprise-grade causal intelligence and multi-agent simulation platform. Originally designed as an experimental 3D conceptual space, it has evolved into a performant, production-ready 2D dashboard powered by an SVG-based force-directed graph engine. Operating entirely in the browser, LAPLACE allows users to visualize, simulate, and dynamically intervene in complex Structural Causal Models (SCMs) using autonomous AI agents.
 
-L.A.P.L.A.C.E. is an autonomous causal intelligence platform that transcends traditional predictive dashboards. Built with a zero-dependency cinematic WebGL engine, it visualizes complex systems as **Structural Causal Models (SCMs)** and deploys multi-agent reasoning to identify root causes, simulate counterfactuals ("What-Ifs"), and evolve system knowledge in real-time.
+## 🚀 Key Features
 
-![L.A.P.L.A.C.E. Interface](https://via.placeholder.com/1200x600/050810/00f0ff?text=L.A.P.L.A.C.E.+Autonomous+Causal+Intelligence) <!-- Replace with real screenshot url after hosting -->
+* **Real-time Causal Intelligence**: Models complex systemic relationships via autonomous LLM agents (powered by Google Gemini 2.5 Flash).
+* **Multi-Agent Orchestration**: Specialized agents (`AnalystAgent`, `CounterfactualAgent`, `InterventionAgent`, `EvolutionAgent`) execute "What-If" scenarios sequentially and communicate findings autonomously.
+* **SVG Force Topology**: Deprecated the resource-heavy Three.js 3D layer for a highly-performant, crisp D3.js 2D SVG canvas optimized for causal observability.
+* **True Glassmorphism UI**: High-fidelity, data-driven "True Black & White" dashboard with beautiful frosted-glass translucent overlays mapped over a dot-matrix metric background. 
+* **Bring-Your-Own-Key (BYOK) Security**: Fully decoupled secure infrastructure where all LLM inference operations occur utilizing client-provided API keys scoped to local storage. 
+* **Cinematic Experience**: Loading splash screens and fully autonomous node-reveals to give users a breathtaking software experience.
 
----
+## 🏗️ Architecture
 
-## Architecture & Causal Engine
+LAPLACE is a complete single-page application (SPA) built using Vite and entirely vanilla HTML/CSS/JS.
 
-At its core, L.A.P.L.A.C.E. operates on the principles of **Pearl's Do-Calculus**. Instead of identifying mere correlations, the system models directed causal pathways (e.g., `Code Churn -> Bug Density -> Incident Rate`). 
+```mermaid
+graph TD
+    classDef ui fill:#000,stroke:#555,stroke-width:1px,color:#fff;
+    classDef agent fill:#111,stroke:#00A3FF,stroke-width:1px,color:#fff;
+    classDef engine fill:#111,stroke:#34D59A,stroke-width:1px,color:#fff;
+    classDef data fill:#111,stroke:#F2B600,stroke-width:1px,color:#fff;
 
-The architecture is driven by a specialized **Multi-Agent Pipeline** powered by **Gemini 2.5 Flash**:
+    UI[UI Layer<br>Glassmorphism / HUD]:::ui --> Orchestrator[Multi-Agent Orchestrator]:::agent
+    
+    Orchestrator --> LLM[LLM Service<br>Gemini API]:::agent
+    
+    Orchestrator --> AgentA[Analyst Agent]:::agent
+    Orchestrator --> AgentB[Counterfactual Agent]:::agent
+    Orchestrator --> AgentC[Intervention Agent]:::agent
+    Orchestrator --> AgentD[Evolution Agent]:::agent
+    
+    AgentA --> CausalMath[Causal Math Engine<br>Probabilistic Inference]:::engine
+    AgentB --> CausalMath
+    AgentC --> CausalMath
+    AgentD --> CausalMath
+    
+    CausalMath --> GraphData[(Structural Causal Model<br>JSON Store)]:::data
+    
+    GraphData --> D3[D3 Force Engine<br>CausalGraph2D SVG Layer]:::engine
+    D3 --> UI
+```
 
-1. **Analyst Agent**: Scans the 3D causal graph to identify anomalous nodes and performs recursive backward traces to isolate root causes.
-2. **Counterfactual Agent**: Simulates interventions using the `do()` operator (e.g., *What if we strictly forced Test Coverage to 85%?*), propagating predicted outcomes across the entire network.
-3. **Intervention Agent**: Deploys structural recommendations and locks causal boundaries.
-4. **Evolution Agent**: Ingests ground-truth data post-intervention, computes prediction accuracy, and updates the neural weights of the causal graph via gradient descent—allowing the intelligence schema to self-evolve.
+### Component Breakdown
+1. **Multi-Agent Orchestrator (`AgentOrchestrator.js`)**: Manages the life cycle of inference loops, dispatching tasks to specific expert agents.
+2. **Causal Topology Renderer (`CausalGraph2D.js`)**: Renders states, highlights active hypotheses, and visualizes nodes on an interactive SVG canvas.
+3. **Causal Mathematics (`CausalMath.js`)**: Handles back-propagation of probabilities within the structural causal model graph. 
 
----
+## 🛠️ Tech Stack
+- Core Engine: **Vanilla JavaScript (ES6 Modules)**
+- Visualization Engine: **D3.js** (Zoom, Force Simulation)
+- Build Tooling: **Vite**
+- Hosting: **Google Cloud App Engine**
+- AI Inference: **Google Gemini API** (Configured securely via local BYOK)
 
-## Tech Stack & Project Philosophy
+## 📦 Local Installation
 
-L.A.P.L.A.C.E. was built with an extreme **Zero-Dependency** philosophy for maximum stability, performance, and cinematic aesthetics.
+To run LAPLACE on your local machine:
 
-- **Graphics:** Raw WebGL via `Three.js` and `d3-force-3d`. 
-- **Sound:** Procedural Web Audio API engine. No external MP3/WAV assets. 
-- **Framework:** Vanilla JS + CSS Glassmorphism + Vite. **No React, no bloated frameworks.**
-- **AI Backend:** Direct REST API calls to `Gemini 2.5 Flash` with a client-side localized pipeline. No intermediary Node.js server required.
+1. Clone this repository.
+2. Install npm dependencies:
+```bash
+npm install
+```
+3. Run the development environment:
+```bash
+npm run dev
+```
 
----
+## ☁️ Deployment
 
-## Getting Started
+LAPLACE is configured for instant deployment to Google Cloud App Engine serving a static bundled site.
 
-### Local Deployment
-1. Clone the repository: `git clone https://github.com/omshukla24/Laplace.git`
-2. Install minimal build tools: `npm install`
-3. Start the Vite server: `npm run dev`
-
-### Bring Your Own Key (BYOK) Security
-The platform features an enterprise-grade BYOK implementation. Your LLM API key stays entirely on your local machine.
-
-- Drop a `.env` file in the root containing `VITE_GEMINI_API_KEY="your_key_here"`
-- **Or**, simply hit the Settings gear in the L.A.P.L.A.C.E. HUD to input your key directly into local browser storage. The app will never leak your key to a backend server.
-
----
-
-## Hacking / Data Ingestion
-
-L.A.P.L.A.C.E. natively ingests schema topologies via URL. It currently hits `/default-causal-graph.json`. You can hook this dynamically to parse metrics out of Jira, PagerDuty, or Datadog by replacing the fetch path in `src/main.js`.
+1. Build for production:
+```bash
+npm run build
+```
+2. Deploy to Google Cloud:
+```bash
+gcloud app deploy app.yaml -q
+```
