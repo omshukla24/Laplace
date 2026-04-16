@@ -620,6 +620,7 @@ async function boot() {
         title: "Custom Hypothesis",
         intervention_node: targetNodeId,
         intervention_value: overrideVal,
+        affected_nodes: state.scenario.steps.whatif.affected_nodes || [],
         estimated_paths: state.scenario.steps.whatif.estimated_paths || state.scenario.steps.whatif.highlighted_edges || []
       };
 

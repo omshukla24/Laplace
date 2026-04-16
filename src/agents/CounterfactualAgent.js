@@ -34,7 +34,8 @@ export class CounterfactualAgent {
     const downstream = CausalMath.getDownstreamNodes(this.graphData, intervention_node);
 
     for (const nodeId of downstream) {
-      if (!affected_nodes.includes(nodeId)) continue;
+      const validAffectedNodes = affected_nodes || downstream;
+      if (!validAffectedNodes.includes(nodeId)) continue;
 
       await this.delay(300);
 
